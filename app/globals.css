@@ -14,7 +14,7 @@
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;height:100%}
 body{
-  background:radial-gradient(125% 125% at 50% 35%, transparent 52%, rgba(0,0,0,.85) 100%), #000;
+  background:radial-gradient(125% 125% at 50% 35%, transparent 38%, rgba(0,0,0,.96) 100%), #000;
   color:var(--text);
   font-family:'Onest',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
   -webkit-font-smoothing:antialiased;letter-spacing:-.01em;
@@ -27,9 +27,9 @@ body{
 .hq::before{
   content:"";position:fixed;inset:-25%;z-index:-2;
   background:
-    radial-gradient(38% 38% at 28% 30%, rgba(255,255,255,.09), transparent 70%),
-    radial-gradient(34% 34% at 76% 64%, rgba(255,255,255,.06), transparent 72%),
-    radial-gradient(30% 30% at 60% 18%, rgba(255,255,255,.05), transparent 72%);
+    radial-gradient(38% 38% at 28% 30%, rgba(255,255,255,.045), transparent 70%),
+    radial-gradient(34% 34% at 76% 64%, rgba(255,255,255,.03), transparent 72%),
+    radial-gradient(30% 30% at 60% 18%, rgba(255,255,255,.022), transparent 72%);
   filter:blur(8px);
   animation:drift 34s ease-in-out infinite alternate;
 }
@@ -41,11 +41,11 @@ body{
 
 /* panující mřížka + grain */
 .hq::after{
-  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.6;
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.32;
   background-image:
-    linear-gradient(rgba(255,255,255,.028) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.028) 1px, transparent 1px),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+    linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.14'/%3E%3C/svg%3E");
   background-size:46px 46px,46px 46px,180px 180px;
   animation:pan 52s linear infinite;
 }
