@@ -44,8 +44,8 @@ async function saveData(key, value) {
   } catch {}
 }
 
-const ACCENT = "#30d158", BORDER = "rgba(255,255,255,0.09)", TEXT = "#f5f5f7", MUTED = "#86868b";
-const fitColor = (f) => f === "good" ? ACCENT : f === "maybe" ? "#ffd60a" : f === "poor" ? "#ff453a" : MUTED;
+const ACCENT = "#ffffff", BORDER = "rgba(255,255,255,0.09)", TEXT = "#f5f5f7", MUTED = "#86868b";
+const fitColor = (f) => f === "good" ? "#ffffff" : f === "maybe" ? "#9a9aa2" : f === "poor" ? "#5c5c64" : MUTED;
 
 const DEFAULT_BRAIN = `# FXSPEEDRUNNER — BRAND BRAIN
 Forex edukace + signály. 3letej track record, top-2 na FTMO, 170+ platících členů, ~11,7k IG.
@@ -188,7 +188,7 @@ Output ONLY the JSON object. No notes, commentary, markdown or any text before o
           placeholder='např. "ahoj, koukal jsem na vás na IG, jak to funguje a kolik to stojí? netradoval jsem nikdy"' />
         <div style={{ marginTop: 12 }}><button className="hq-btn" onClick={go} disabled={loading || !msg.trim()}>{loading ? <><span className="hq-spin" />&nbsp; Formuluju…</> : "Naformuluj odpověď →"}</button></div>
       </div>
-      {err && <div className="hq-card" style={{ borderColor: "#ff453a55", color: "#ff453a" }}>{err}</div>}
+      {err && <div className="hq-card" style={{ borderColor: "rgba(255,255,255,0.20)", color: "#f5f5f7" }}>{err}</div>}
       {res && (
         <div className="hq-card hq-fade">
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 13 }}>
@@ -200,8 +200,8 @@ Output ONLY the JSON object. No notes, commentary, markdown or any text before o
           <div className="hq-out">{res.reply}</div>
           <div style={{ display: "flex", gap: 10, marginTop: 12 }}><Copy text={res.reply || ""} /><button className="hq-ghost" onClick={go}>↻ jinak</button></div>
           {Array.isArray(res.missing) && res.missing.length > 0 && (
-            <div style={{ marginTop: 13, padding: "10px 13px", background: "rgba(255,214,10,0.08)", border: "1px solid #ffd60a40", borderRadius: 10, fontSize: 13 }}>
-              <b style={{ color: "#ffd60a" }}>Chybí v mozku:</b>
+            <div style={{ marginTop: 13, padding: "10px 13px", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.18)", borderRadius: 10, fontSize: 13 }}>
+              <b style={{ color: "#f5f5f7" }}>Chybí v mozku:</b>
               <ul style={{ margin: "5px 0 0", paddingLeft: 18 }}>{res.missing.map((m, i) => <li key={i}>{m}</li>)}</ul>
             </div>
           )}
@@ -258,7 +258,7 @@ function Chat({ brain }) {
         {msgs.length === 0 && <div style={{ color: MUTED, fontSize: 13.5, margin: "auto", textAlign: "center", maxWidth: 360 }}>
           Zeptej se na cokoliv kolem Speedrunneru — „naplánuj mi obsah na tejden", „jak zvednout konverzi z free do VIP", „napiš onboarding zprávu pro nový členy"…</div>}
         {msgs.map((m, i) => <div key={i} className={"hq-bub " + (m.role === "user" ? "hq-u" : "hq-a")}>{m.content}</div>)}
-        {loading && <div className="hq-bub hq-a"><span className="hq-spin" style={{ borderColor: "#30d15855", borderTopColor: ACCENT }} /> &nbsp;přemýšlím…</div>}
+        {loading && <div className="hq-bub hq-a"><span className="hq-spin" style={{ borderColor: "#ffffff55", borderTopColor: ACCENT }} /> &nbsp;přemýšlím…</div>}
         <div ref={endRef} />
       </div>
       <div style={{ display: "flex", gap: 10, borderTop: "1px solid " + BORDER, paddingTop: 12 }}>
@@ -305,7 +305,7 @@ Output ONLY the JSON object. No notes, commentary, markdown or any text before o
           placeholder='např. "dnešní XAUUSD trade +2R, jak jsme to brali podle RBOS" nebo "proč risk management > entry"' />
         <div style={{ marginTop: 12 }}><button className="hq-btn" onClick={go} disabled={loading || !topic.trim()}>{loading ? <><span className="hq-spin" />&nbsp; Píšu…</> : "Vygeneruj 3 varianty →"}</button></div>
       </div>
-      {err && <div className="hq-card" style={{ borderColor: "#ff453a55", color: "#ff453a" }}>{err}</div>}
+      {err && <div className="hq-card" style={{ borderColor: "rgba(255,255,255,0.20)", color: "#f5f5f7" }}>{err}</div>}
       {variants && variants.map((v, i) => (
         <div key={i} className="hq-card hq-fade">
           <div className="hq-label" style={{ marginBottom: 8 }}>Varianta {i + 1}</div>
