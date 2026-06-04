@@ -16,6 +16,14 @@ async function callClaude(system, messages, maxTokens = 1024) {
   return (data.content || []).filter((b) => b.type === "text").map((b) => b.text).join("\n");
 }
 const stripJson = (t) => t.replace(/```json|```/g, "").trim();
+// robustní: zvládne i když model přilepí text před/za JSON (vytáhne první {...} blok)
+function parseJsonLoose(t) {
+  const s = stripJson(t);
+  try { return JSON.parse(s); } catch {}
+  const a = s.indexOf("{"), b = s.lastIndexOf("}");
+  if (a !== -1 && b > a) { try { return JSON.parse(s.slice(a, b + 1)); } catch {} }
+  return null;
+}
 
 // cloud storage přes náš backend (Supabase) — sdílený napříč zařízeníma
 async function loadData(key) {
@@ -150,7 +158,8 @@ function Sales({ brain }) {
 
   const ENGINE = `You are the SALES CO-PILOT for FXSpeedrunner. You draft replies to prospects for the founder to review and SEND HIMSELF — you never send anything.
 RULES: use ONLY facts in the brand brain; never invent prices/claims; if a fact is missing, list it in "missing" (don't guess). Reply in the prospect's language. Match the voice. NEVER promise profits, no hype, no pressure. Qualify lightly, recommend the fitting tier, handle the objection, stay concise & human, end with a low-pressure next step.
-Return ONLY valid JSON: {"intent":"","tier":"or -","fit":"good|maybe|poor|unclear","reply":"","missing":[]}`;
+Return ONLY valid JSON: {"intent":"","tier":"or -","fit":"good|maybe|poor|unclear","reply":"","missing":[]}
+Output ONLY the JSON object. No notes, commentary, markdown or any text before or after it. Any advice to the founder goes nowhere except inside the JSON.`;
 
   const go = async () => {
     if (!msg.trim()) return;
@@ -158,7 +167,7 @@ Return ONLY valid JSON: {"intent":"","tier":"or -","fit":"good|maybe|poor|unclea
     try {
       const t = await callClaude(ENGINE + "\n\n=== BRAND BRAIN ===\n" + brain,
         [{ role: "user", content: `Channel: ${channel}\nStage: ${stage}\n\nProspect:\n"""${msg.trim()}"""` }]);
-      let p; try { p = JSON.parse(stripJson(t)); } catch { p = { intent: "—", tier: "—", fit: "unclear", reply: stripJson(t), missing: [] }; }
+      const p = parseJsonLoose(t) || { intent: "—", tier: "—", fit: "unclear", reply: stripJson(t), missing: [] };
       setRes(p);
     } catch (e) { setErr(e.message); } finally { setLoading(false); }
   };
@@ -274,11 +283,13 @@ function Posts({ brain }) {
     if (!topic.trim()) return;
     setLoading(true); setErr(null); setVariants(null);
     const SYS = `You write social content for FXSpeedrunner in the brand voice. Honest, human, no hype, NEVER promise profits, no false urgency. Use the brand brain. Match Czech/English to the topic input. Format fits "${type}". Give 3 distinct options.
-Return ONLY valid JSON: {"variants":["option 1","option 2","option 3"]}\n\n=== BRAND BRAIN ===\n${brain}`;
+Return ONLY valid JSON: {"variants":["option 1","option 2","option 3"]}
+Output ONLY the JSON object. No notes, commentary, markdown or any text before or after it.\n\n=== BRAND BRAIN ===\n${brain}`;
     try {
       const t = await callClaude(SYS, [{ role: "user", content: `Type: ${type}\nTéma / detaily: ${topic.trim()}` }], 1024);
-      let v; try { v = JSON.parse(stripJson(t)).variants; } catch { v = [stripJson(t)]; }
-      setVariants(Array.isArray(v) ? v : [String(v)]);
+      const parsed = parseJsonLoose(t);
+      const v = parsed && Array.isArray(parsed.variants) ? parsed.variants : [stripJson(t)];
+      setVariants(v);
     } catch (e) { setErr(e.message); } finally { setLoading(false); }
   };
 
